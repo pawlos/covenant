@@ -42,4 +42,82 @@ public class DirectSinkTests
         Assert.Equal("array", sinkHits[0].SinkLabel);
         Assert.Equal("Caller", sinkHits[0].AnnotatedCaller.Name);
     }
+
+    [Fact]
+    public void AnnotatedMethod_CreatesReferenceObject_FiresCGC003Object()
+    {
+        var source = """
+            using MustNotAllocate;
+
+            public class Foo { public Foo() {} }
+
+            public class C
+            {
+                [MustNotAllocate]
+                public void Caller() { var x = new Foo(); }
+            }
+            """;
+
+        var dllPath = CompileFixture.Emit(source);
+        using var assembly = AssemblyDefinition.ReadAssembly(
+            dllPath,
+            new ReaderParameters { AssemblyResolver = AssemblyResolver.ForAssemblyPath(dllPath) });
+
+        var diagnostics = BuildWalker().Analyze(assembly);
+
+        var sinkHits = diagnostics.Where(d => d.Id == DiagnosticIds.SinkHit).ToImmutableArray();
+        Assert.Single(sinkHits);
+        Assert.Equal("object", sinkHits[0].SinkLabel);
+    }
+
+    [Fact]
+    public void AnnotatedMethod_BoxesValue_FiresCGC003Boxing()
+    {
+        var source = """
+            using MustNotAllocate;
+
+            public class C
+            {
+                [MustNotAllocate]
+                public void Caller() { object o = 42; System.GC.KeepAlive(o); }
+            }
+            """;
+
+        var dllPath = CompileFixture.Emit(source);
+        using var assembly = AssemblyDefinition.ReadAssembly(
+            dllPath,
+            new ReaderParameters { AssemblyResolver = AssemblyResolver.ForAssemblyPath(dllPath) });
+
+        var diagnostics = BuildWalker().Analyze(assembly);
+
+        var sinkHits = diagnostics.Where(d => d.Id == DiagnosticIds.SinkHit).ToImmutableArray();
+        Assert.Single(sinkHits);
+        Assert.Equal("boxing", sinkHits[0].SinkLabel);
+    }
+
+    [Fact]
+    public void AnnotatedMethod_CreatesStruct_DoesNotFireCGC003()
+    {
+        var source = """
+            using MustNotAllocate;
+
+            public struct Point { public Point(int x) {} }
+
+            public class C
+            {
+                [MustNotAllocate]
+                public void Caller() { var p = new Point(1); }
+            }
+            """;
+
+        var dllPath = CompileFixture.Emit(source);
+        using var assembly = AssemblyDefinition.ReadAssembly(
+            dllPath,
+            new ReaderParameters { AssemblyResolver = AssemblyResolver.ForAssemblyPath(dllPath) });
+
+        var diagnostics = BuildWalker().Analyze(assembly);
+
+        var sinkHits = diagnostics.Where(d => d.Id == DiagnosticIds.SinkHit).ToImmutableArray();
+        Assert.Empty(sinkHits);
+    }
 }

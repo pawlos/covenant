@@ -14,5 +14,6 @@ public sealed class MustNotAllocateAnalyzer : CallgraphClosureAnalyzer
         Direction: PropagationDirection.Downward,
         Sinks: ImmutableArray.Create<ISink>(
             new ObjectCreationSink(),
-            new ArrayCreationSink()))) { }
+            new ArrayCreationSink(),
+            new BoxingConversionSink()))) { }
 }

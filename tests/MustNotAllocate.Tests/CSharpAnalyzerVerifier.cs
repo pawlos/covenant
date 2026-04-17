@@ -14,7 +14,10 @@ public static class CSharpAnalyzerVerifier<TAnalyzer>
     {
         public Test()
         {
-            ReferenceAssemblies = ReferenceAssemblies.Net.Net80;
+            ReferenceAssemblies = new ReferenceAssemblies(
+                "net10.0",
+                new Microsoft.CodeAnalysis.Testing.PackageIdentity("Microsoft.NETCore.App.Ref", "10.0.0"),
+                System.IO.Path.Combine("ref", "net10.0"));
             TestState.AdditionalReferences.Add(
                 MetadataReference.CreateFromFile(
                     typeof(MustNotAllocateAttribute).Assembly.Location));

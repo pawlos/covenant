@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <IsPackable>false</IsPackable>
     <!-- NU1701: some transitive deps of Analyzer.Testing.XUnit target netfx but work fine at runtime -->
     <!-- CS0618: XUnitVerifier is marked obsolete in newer SDK guidance but still functional -->

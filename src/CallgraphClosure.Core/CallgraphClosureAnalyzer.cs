@@ -57,9 +57,27 @@ public abstract class CallgraphClosureAnalyzer : DiagnosticAnalyzer
         Compilation compilation,
         OperationBlockAnalysisContext b)
     {
-        var target = op switch
+        // Skip object creations that are attribute applications — those are not
+        // runtime allocations in the annotated method body.
+        if (op is IObjectCreationOperation && op.Parent is IAttributeOperation) return;
+
+        foreach (var sink in _config.Sinks)
+        {
+            var label = sink.Match(op);
+            if (label is null) continue;
+
+            b.ReportDiagnostic(Diagnostic.Create(
+                Diagnostics.SinkHit,
+                op.Syntax.GetLocation(),
+                caller.Name,
+                attrSym.Name,
+                label));
+        }
+
+        IMethodSymbol? target = op switch
         {
             IInvocationOperation inv => inv.TargetMethod,
+            IObjectCreationOperation oc => oc.Constructor,
             _ => null,
         };
 
@@ -75,12 +93,18 @@ public abstract class CallgraphClosureAnalyzer : DiagnosticAnalyzer
             ? Diagnostics.ExternalBoundary
             : Diagnostics.SourceBoundary;
 
+        // For constructors, use the containing type name (e.g. "Foo") rather than
+        // the method name (".ctor") so diagnostics are more readable.
+        var targetName = op is IObjectCreationOperation
+            ? original.ContainingType.Name
+            : original.Name;
+
         b.ReportDiagnostic(Diagnostic.Create(
             descriptor,
             op.Syntax.GetLocation(),
             caller.Name,
             attrSym.Name,
-            original.Name));
+            targetName));
     }
 
     private static bool HasAttribute(ISymbol symbol, INamedTypeSymbol attrSym) =>

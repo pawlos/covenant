@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
+    <PackageReference Include="xunit" Version="2.4.2" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.5.7" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.8.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\CallgraphClosure.ILCheck.Core\CallgraphClosure.ILCheck.Core.csproj" />
+    <ProjectReference Include="..\..\src\MustNotAllocate.ILCheck\MustNotAllocate.ILCheck.csproj" />
+    <ProjectReference Include="..\..\src\MustNotAllocate\MustNotAllocate.csproj" />
+  </ItemGroup>
+</Project>

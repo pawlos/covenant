@@ -1,0 +1,5 @@
+root = true
+
+[*.cs]
+# Elevate CGC002 to warning so it appears in build output alongside CGC003
+dotnet_diagnostic.CGC002.severity = warning

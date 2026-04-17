@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- Core needed transitively by the analyzer; no reference needed in user code -->
+    <ProjectReference Include="..\CallgraphClosure.Core\CallgraphClosure.Core.csproj"
+                      OutputItemType="Analyzer"
+                      ReferenceOutputAssembly="false" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- Load analyzers from the pre-built DLLs (absolute paths) -->
+    <Analyzer Include="$(MSBuildThisFileDirectory)..\MustNotAllocate\bin\$(Configuration)\netstandard2.0\MustNotAllocate.dll" />
+    <Analyzer Include="$(MSBuildThisFileDirectory)..\CallgraphClosure.Core\bin\$(Configuration)\netstandard2.0\CallgraphClosure.Core.dll" />
+    <!-- Reference MustNotAllocate so the [MustNotAllocate] attribute type resolves -->
+    <Reference Include="$(MSBuildThisFileDirectory)..\MustNotAllocate\bin\$(Configuration)\netstandard2.0\MustNotAllocate.dll" />
+  </ItemGroup>
+</Project>

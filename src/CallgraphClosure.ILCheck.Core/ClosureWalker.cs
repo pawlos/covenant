@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using Mono.Cecil;
+using Mono.Cecil.Cil;
 
 namespace CallgraphClosure.ILCheck.Core;
 
@@ -51,6 +52,7 @@ public sealed class ClosureWalker
 
         foreach (var instruction in method.Body.Instructions)
         {
+            // Sink dispatch.
             foreach (var sink in _sinks)
             {
                 var label = sink.Match(instruction);
@@ -64,7 +66,47 @@ public sealed class ClosureWalker
                     SinkLabel: label,
                     UnresolvedTarget: null));
             }
+
+            // Call boundary.
+            var target = ExtractCallTarget(instruction);
+            if (target is null) continue;
+
+            MethodDefinition? resolved;
+            try
+            {
+                resolved = target.Resolve();
+            }
+            catch
+            {
+                resolved = null;
+            }
+
+            if (resolved is not null && HasPropagatingAttribute(resolved))
+                continue;
+
+            var sameAssembly =
+                resolved is not null &&
+                resolved.Module.Assembly == annotatedCaller.Module.Assembly;
+
+            diagnostics.Add(new Diagnostic(
+                Id: sameAssembly ? DiagnosticIds.SourceBoundary : DiagnosticIds.ExternalBoundary,
+                PropertyName: _propertyName,
+                AnnotatedCaller: annotatedCaller,
+                Chain: chain.Add(target),
+                SinkLabel: null,
+                UnresolvedTarget: resolved is null ? target : null));
         }
+    }
+
+    private static MethodReference? ExtractCallTarget(Instruction instruction)
+    {
+        if (instruction.OpCode == OpCodes.Call ||
+            instruction.OpCode == OpCodes.Callvirt ||
+            instruction.OpCode == OpCodes.Newobj)
+        {
+            return instruction.Operand as MethodReference;
+        }
+        return null;
     }
 
     private bool HasPropagatingAttribute(MethodDefinition method)

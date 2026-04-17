@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using Mono.Cecil;
 
@@ -21,11 +22,52 @@ public sealed class ClosureWalker
 
     public ImmutableArray<Diagnostic> Analyze(AssemblyDefinition assembly)
     {
-        // Implemented in later tasks.
-        return ImmutableArray<Diagnostic>.Empty;
+        var diagnostics = ImmutableArray.CreateBuilder<Diagnostic>();
+
+        foreach (var type in assembly.MainModule.Types)
+        {
+            foreach (var method in type.Methods)
+            {
+                if (!HasPropagatingAttribute(method)) continue;
+
+                VisitMethodBody(
+                    method,
+                    annotatedCaller: method,
+                    chain: ImmutableArray.Create<MethodReference>(method),
+                    diagnostics);
+            }
+        }
+
+        return diagnostics.ToImmutable();
     }
 
-    public bool HasPropagatingAttribute(MethodDefinition method)
+    private void VisitMethodBody(
+        MethodDefinition method,
+        MethodDefinition annotatedCaller,
+        ImmutableArray<MethodReference> chain,
+        ImmutableArray<Diagnostic>.Builder diagnostics)
+    {
+        if (method.Body is null) return;
+
+        foreach (var instruction in method.Body.Instructions)
+        {
+            foreach (var sink in _sinks)
+            {
+                var label = sink.Match(instruction);
+                if (label is null) continue;
+
+                diagnostics.Add(new Diagnostic(
+                    Id: DiagnosticIds.SinkHit,
+                    PropertyName: _propertyName,
+                    AnnotatedCaller: annotatedCaller,
+                    Chain: chain,
+                    SinkLabel: label,
+                    UnresolvedTarget: null));
+            }
+        }
+    }
+
+    private bool HasPropagatingAttribute(MethodDefinition method)
     {
         foreach (var attr in method.CustomAttributes)
         {

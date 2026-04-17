@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <AssemblyName>cgc-ilcheck</AssemblyName>
+    <RootNamespace>CallgraphClosure.ILCheck.Cli</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CallgraphClosure.ILCheck.Core\CallgraphClosure.ILCheck.Core.csproj" />
+    <ProjectReference Include="..\MustNotAllocate.ILCheck\MustNotAllocate.ILCheck.csproj" />
+  </ItemGroup>
+</Project>

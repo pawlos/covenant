@@ -31,10 +31,12 @@ public sealed class ClosureWalker
             {
                 if (!HasPropagatingAttribute(method)) continue;
 
+                var visited = new HashSet<string>();
                 VisitMethodBody(
                     method,
                     annotatedCaller: method,
                     chain: ImmutableArray.Create<MethodReference>(method),
+                    visited,
                     diagnostics);
             }
         }
@@ -46,9 +48,11 @@ public sealed class ClosureWalker
         MethodDefinition method,
         MethodDefinition annotatedCaller,
         ImmutableArray<MethodReference> chain,
+        HashSet<string> visited,
         ImmutableArray<Diagnostic>.Builder diagnostics)
     {
         if (method.Body is null) return;
+        if (!visited.Add(method.FullName)) return;
 
         foreach (var instruction in method.Body.Instructions)
         {
@@ -67,7 +71,7 @@ public sealed class ClosureWalker
                     UnresolvedTarget: null));
             }
 
-            // Call boundary.
+            // Call handling.
             var target = ExtractCallTarget(instruction);
             if (target is null) continue;
 
@@ -81,9 +85,24 @@ public sealed class ClosureWalker
                 resolved = null;
             }
 
+            // Annotated callee terminates the walk — it made the same promise.
             if (resolved is not null && HasPropagatingAttribute(resolved))
                 continue;
 
+            // Walkable body: recurse. Sinks inside become CGC003 attributed to annotatedCaller
+            // with an extended chain.
+            if (resolved?.Body is not null)
+            {
+                VisitMethodBody(
+                    resolved,
+                    annotatedCaller,
+                    chain.Add(target),
+                    visited,
+                    diagnostics);
+                continue;
+            }
+
+            // Unwalkable: emit boundary diagnostic.
             var sameAssembly =
                 resolved is not null &&
                 resolved.Module.Assembly == annotatedCaller.Module.Assembly;

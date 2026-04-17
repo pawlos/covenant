@@ -7,7 +7,7 @@ using Xunit;
 
 namespace MustNotAllocate.ILCheck.Tests;
 
-public class SameAssemblyBoundaryTests
+public class TransitiveWalkTests
 {
     private static ClosureWalker BuildWalker() => new(
         MustNotAllocateIlAnalyzer.AttributeFullName,
@@ -15,20 +15,18 @@ public class SameAssemblyBoundaryTests
         propertyName: "MustNotAllocate");
 
     [Fact]
-    public void AnnotatedMethod_CallsUnannotatedEmptyCallee_WalksThroughFiresNothing()
+    public void AnnotatedCaller_IndirectArrayAllocation_FiresCGC003WithChain()
     {
-        // With transitive walking, an empty unannotated callee is walked through. No sinks,
-        // no diagnostics. The M1 Roslyn pass treats this differently (emits CGC001) — that's
-        // the intended M1/M2 semantic divergence.
+        // Caller → Helper → new int[]. Helper is unannotated, same assembly.
         var source = """
             using MustNotAllocate;
 
             public class C
             {
                 [MustNotAllocate]
-                public void Caller() { Callee(); }
+                public void Caller() { Helper(); }
 
-                public void Callee() { }
+                public void Helper() { var a = new int[10]; }
             }
             """;
 
@@ -39,11 +37,18 @@ public class SameAssemblyBoundaryTests
 
         var diagnostics = BuildWalker().Analyze(assembly);
 
-        Assert.Empty(diagnostics);
+        var sinkHits = diagnostics
+            .Where(d => d.Id == DiagnosticIds.SinkHit && d.SinkLabel == "array")
+            .ToImmutableArray();
+
+        Assert.Single(sinkHits);
+        Assert.Equal(2, sinkHits[0].Chain.Length);
+        Assert.Equal("Caller", sinkHits[0].Chain[0].Name);
+        Assert.Equal("Helper", sinkHits[0].Chain[1].Name);
     }
 
     [Fact]
-    public void AnnotatedMethod_CallsAnnotatedSameAssembly_FiresNothing()
+    public void AnnotatedCaller_IndirectViaTwoHops_FiresCGC003WithFullChain()
     {
         var source = """
             using MustNotAllocate;
@@ -51,10 +56,11 @@ public class SameAssemblyBoundaryTests
             public class C
             {
                 [MustNotAllocate]
-                public void Caller() { Callee(); }
+                public void A() { B(); }
 
-                [MustNotAllocate]
-                public void Callee() { }
+                public void B() { C_(); }
+
+                public void C_() { var a = new int[10]; }
             }
             """;
 
@@ -65,6 +71,14 @@ public class SameAssemblyBoundaryTests
 
         var diagnostics = BuildWalker().Analyze(assembly);
 
-        Assert.Empty(diagnostics);
+        var sinkHits = diagnostics
+            .Where(d => d.Id == DiagnosticIds.SinkHit && d.SinkLabel == "array")
+            .ToImmutableArray();
+
+        Assert.Single(sinkHits);
+        Assert.Equal(3, sinkHits[0].Chain.Length);
+        Assert.Equal("A", sinkHits[0].Chain[0].Name);
+        Assert.Equal("B", sinkHits[0].Chain[1].Name);
+        Assert.Equal("C_", sinkHits[0].Chain[2].Name);
     }
 }

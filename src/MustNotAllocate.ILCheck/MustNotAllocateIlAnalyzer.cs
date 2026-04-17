@@ -1,0 +1,16 @@
+using System.Collections.Immutable;
+using CallgraphClosure.ILCheck.Core;
+using MustNotAllocate.ILCheck.Sinks;
+
+namespace MustNotAllocate.ILCheck;
+
+public static class MustNotAllocateIlAnalyzer
+{
+    public const string AttributeFullName = "MustNotAllocate.MustNotAllocateAttribute";
+
+    public static ImmutableArray<IIlSink> Sinks { get; } =
+        ImmutableArray.Create<IIlSink>(
+            new NewObjSink(),
+            new NewArrSink(),
+            new BoxSink());
+}

@@ -4,22 +4,24 @@ using CallgraphClosure.ILCheck.Core;
 using MustNotAllocate.ILCheck;
 using Mono.Cecil;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace MustNotAllocate.ILCheck.Tests;
 
 public class CrossAssemblyBoundaryTests
 {
+    private readonly ITestOutputHelper _output;
+
+    public CrossAssemblyBoundaryTests(ITestOutputHelper output) => _output = output;
+
     private static ClosureWalker BuildWalker() => new(
         MustNotAllocateIlAnalyzer.AttributeFullName,
         MustNotAllocateIlAnalyzer.Sinks,
         propertyName: "MustNotAllocate");
 
     [Fact]
-    public void AnnotatedMethod_CallsBCLMethod_FiresCGC001Or002()
+    public void AnnotatedMethod_CallsConsoleWriteLine_ProducesCGC002OrUpgradedCGC003()
     {
-        // This test asserts the walker reports SOMETHING when calling into the BCL —
-        // either CGC002 (external, opaque) or CGC001-style (transitive, resolved).
-        // Task 14 tightens this to prefer upgraded CGC003 when the BCL is walkable.
         var source = """
             using System;
             using MustNotAllocate;
@@ -38,12 +40,21 @@ public class CrossAssemblyBoundaryTests
 
         var diagnostics = BuildWalker().Analyze(assembly);
 
-        Assert.NotEmpty(diagnostics);
+        // Dump everything for the writeup / for investigation on CI.
+        foreach (var d in diagnostics)
+        {
+            var chainStr = string.Join(" -> ", d.Chain.Select(m => m.Name));
+            _output.WriteLine($"{d.Id} ({d.SinkLabel ?? "-"}): {chainStr}");
+        }
 
-        var hasBoundaryOrSink = diagnostics.Any(d =>
-            d.Id == DiagnosticIds.ExternalBoundary ||
-            d.Id == DiagnosticIds.SourceBoundary ||
-            d.Id == DiagnosticIds.SinkHit);
-        Assert.True(hasBoundaryOrSink);
+        // Outcome A: walk reached a sink inside the BCL → CGC003 upgraded from CGC002.
+        // Outcome B: walk hit a ref-only body or an unresolvable call → CGC002.
+        var hasCGC003Upgrade = diagnostics.Any(d =>
+            d.Id == DiagnosticIds.SinkHit && d.Chain.Length > 1);
+        var hasCGC002 = diagnostics.Any(d => d.Id == DiagnosticIds.ExternalBoundary);
+
+        Assert.True(
+            hasCGC003Upgrade || hasCGC002,
+            "Expected either a transitively-found sink (CGC003) or an unresolved external (CGC002).");
     }
 }

@@ -10,7 +10,7 @@ namespace MustNotAllocate;
 public sealed class MustNotAllocateAnalyzer : CallgraphClosureAnalyzer
 {
     public MustNotAllocateAnalyzer() : base(new Config(
-        AttributeFullName: "MustNotAllocate.MustNotAllocateAttribute",
+        AttributeFullName: "CallgraphClosure.Attributes.MustNotAllocateAttribute",
         Direction: PropagationDirection.Downward,
         Sinks: ImmutableArray.Create<ISink>(
             new ObjectCreationSink(),

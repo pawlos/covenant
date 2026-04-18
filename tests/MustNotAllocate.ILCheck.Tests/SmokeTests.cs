@@ -9,7 +9,7 @@ public class SmokeTests
     public void CompileFixture_ProducesReadableDll()
     {
         var source = """
-            using MustNotAllocate;
+            using CallgraphClosure.Attributes;
 
             public class C
             {

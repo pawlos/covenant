@@ -24,7 +24,7 @@ public class CrossAssemblyBoundaryTests
     {
         var source = """
             using System;
-            using MustNotAllocate;
+            using CallgraphClosure.Attributes;
 
             public class C
             {

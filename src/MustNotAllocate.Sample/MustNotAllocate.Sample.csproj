@@ -14,7 +14,7 @@
     <!-- Load analyzers from the pre-built DLLs (absolute paths) -->
     <Analyzer Include="$(MSBuildThisFileDirectory)..\MustNotAllocate\bin\$(Configuration)\netstandard2.0\MustNotAllocate.dll" />
     <Analyzer Include="$(MSBuildThisFileDirectory)..\CallgraphClosure.Core\bin\$(Configuration)\netstandard2.0\CallgraphClosure.Core.dll" />
-    <!-- Reference MustNotAllocate so the [MustNotAllocate] attribute type resolves -->
-    <Reference Include="$(MSBuildThisFileDirectory)..\MustNotAllocate\bin\$(Configuration)\netstandard2.0\MustNotAllocate.dll" />
+    <!-- Reference CallgraphClosure.Attributes so the [MustNotAllocate] attribute type resolves -->
+    <Reference Include="$(MSBuildThisFileDirectory)..\CallgraphClosure.Attributes\bin\$(Configuration)\netstandard2.0\CallgraphClosure.Attributes.dll" />
   </ItemGroup>
 </Project>

@@ -18,7 +18,7 @@ public class CycleGuardTests
     public void MutualRecursion_TerminatesWithoutHanging_FiresOneSinkHit()
     {
         var source = """
-            using MustNotAllocate;
+            using CallgraphClosure.Attributes;
 
             public class C
             {

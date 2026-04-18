@@ -38,7 +38,7 @@ public static class CompileFixture
         }
 
         // Copy MustNotAllocate.dll next to the fixture so Cecil's resolver finds it.
-        var mustNotAllocateDllPath = typeof(global::MustNotAllocate.MustNotAllocateAttribute)
+        var mustNotAllocateDllPath = typeof(global::CallgraphClosure.Attributes.MustNotAllocateAttribute)
             .Assembly.Location;
         File.Copy(
             mustNotAllocateDllPath,
@@ -62,6 +62,6 @@ public static class CompileFixture
 
         // Make sure MustNotAllocate is referenced so fixtures can use [MustNotAllocate].
         yield return MetadataReference.CreateFromFile(
-            typeof(global::MustNotAllocate.MustNotAllocateAttribute).Assembly.Location);
+            typeof(global::CallgraphClosure.Attributes.MustNotAllocateAttribute).Assembly.Location);
     }
 }

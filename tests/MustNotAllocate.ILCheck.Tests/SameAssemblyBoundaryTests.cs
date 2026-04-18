@@ -21,7 +21,7 @@ public class SameAssemblyBoundaryTests
         // no diagnostics. The M1 Roslyn pass treats this differently (emits CGC001) — that's
         // the intended M1/M2 semantic divergence.
         var source = """
-            using MustNotAllocate;
+            using CallgraphClosure.Attributes;
 
             public class C
             {
@@ -46,7 +46,7 @@ public class SameAssemblyBoundaryTests
     public void AnnotatedMethod_CallsAnnotatedSameAssembly_FiresNothing()
     {
         var source = """
-            using MustNotAllocate;
+            using CallgraphClosure.Attributes;
 
             public class C
             {

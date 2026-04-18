@@ -19,7 +19,7 @@ public class TransitiveWalkTests
     {
         // Caller → Helper → new int[]. Helper is unannotated, same assembly.
         var source = """
-            using MustNotAllocate;
+            using CallgraphClosure.Attributes;
 
             public class C
             {
@@ -51,7 +51,7 @@ public class TransitiveWalkTests
     public void AnnotatedCaller_IndirectViaTwoHops_FiresCGC003WithFullChain()
     {
         var source = """
-            using MustNotAllocate;
+            using CallgraphClosure.Attributes;
 
             public class C
             {

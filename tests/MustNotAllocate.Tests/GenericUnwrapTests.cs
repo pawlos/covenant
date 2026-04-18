@@ -10,7 +10,7 @@ public class GenericUnwrapTests
     public async Task AnnotatedGenericCallee_ConstructedForm_DoesNotFireBoundary()
     {
         var source = """
-            using MustNotAllocate;
+            using CallgraphClosure.Attributes;
 
             class C
             {
@@ -30,7 +30,7 @@ public class GenericUnwrapTests
     public async Task UnannotatedGenericCallee_ConstructedForm_FiresOnceAsCGC001()
     {
         var source = """
-            using MustNotAllocate;
+            using CallgraphClosure.Attributes;
 
             class C
             {

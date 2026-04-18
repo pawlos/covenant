@@ -10,7 +10,7 @@ public class CGC001_SourceBoundaryTests
     public async Task AnnotatedMethod_CallsUnannotatedSourceMethod_FiresCGC001()
     {
         var source = """
-            using MustNotAllocate;
+            using CallgraphClosure.Attributes;
 
             class C
             {
@@ -34,7 +34,7 @@ public class CGC001_SourceBoundaryTests
     public async Task AnnotatedMethod_CallsAnnotatedSourceMethod_FiresNothing()
     {
         var source = """
-            using MustNotAllocate;
+            using CallgraphClosure.Attributes;
 
             class C
             {
@@ -54,7 +54,7 @@ public class CGC001_SourceBoundaryTests
     public async Task UnannotatedMethod_CallsUnannotatedSourceMethod_FiresNothing()
     {
         var source = """
-            using MustNotAllocate;
+            using CallgraphClosure.Attributes;
 
             class C
             {

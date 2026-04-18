@@ -10,7 +10,7 @@ public class CGC003_ArrayCreationTests
     public async Task AnnotatedMethod_CreatesArrayWithSize_FiresCGC003()
     {
         var source = """
-            using MustNotAllocate;
+            using CallgraphClosure.Attributes;
 
             class C
             {
@@ -32,7 +32,7 @@ public class CGC003_ArrayCreationTests
     public async Task AnnotatedMethod_CreatesArrayWithInitializer_FiresCGC003()
     {
         var source = """
-            using MustNotAllocate;
+            using CallgraphClosure.Attributes;
 
             class C
             {

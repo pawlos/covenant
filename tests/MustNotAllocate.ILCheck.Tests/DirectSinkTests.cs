@@ -18,7 +18,7 @@ public class DirectSinkTests
     public void AnnotatedMethod_AllocatesArray_FiresCGC003()
     {
         var source = """
-            using MustNotAllocate;
+            using CallgraphClosure.Attributes;
 
             public class C
             {
@@ -47,7 +47,7 @@ public class DirectSinkTests
     public void AnnotatedMethod_CreatesReferenceObject_FiresCGC003Object()
     {
         var source = """
-            using MustNotAllocate;
+            using CallgraphClosure.Attributes;
 
             public class Foo { public Foo() {} }
 
@@ -74,7 +74,7 @@ public class DirectSinkTests
     public void AnnotatedMethod_BoxesValue_FiresCGC003Boxing()
     {
         var source = """
-            using MustNotAllocate;
+            using CallgraphClosure.Attributes;
 
             public class C
             {
@@ -99,7 +99,7 @@ public class DirectSinkTests
     public void AnnotatedMethod_CreatesStruct_DoesNotFireCGC003()
     {
         var source = """
-            using MustNotAllocate;
+            using CallgraphClosure.Attributes;
 
             public struct Point { public Point(int x) {} }
 

@@ -10,7 +10,7 @@ public class CascadingTests
     public async Task BeforeAnnotatingMiddle_DiagnosticOnOuterCall()
     {
         var source = """
-            using MustNotAllocate;
+            using CallgraphClosure.Attributes;
 
             class C
             {
@@ -36,7 +36,7 @@ public class CascadingTests
     public async Task AfterAnnotatingMiddle_DiagnosticShiftsToInnerCall()
     {
         var source = """
-            using MustNotAllocate;
+            using CallgraphClosure.Attributes;
 
             class C
             {

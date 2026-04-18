@@ -9,7 +9,7 @@ public class SmokeTests
     public async Task SourceWithNoAnnotations_ProducesNoDiagnostics()
     {
         var source = """
-            using MustNotAllocate;
+            using CallgraphClosure.Attributes;
 
             class C
             {

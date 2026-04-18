@@ -1,4 +1,4 @@
-using MustNotAllocate;
+using CallgraphClosure.Attributes;
 
 // Toy "audio tick" loop — two intentional violations for the writeup.
 

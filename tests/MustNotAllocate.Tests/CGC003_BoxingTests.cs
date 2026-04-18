@@ -10,7 +10,7 @@ public class CGC003_BoxingTests
     public async Task AnnotatedMethod_ImplicitBoxing_FiresCGC003()
     {
         var source = """
-            using MustNotAllocate;
+            using CallgraphClosure.Attributes;
 
             class C
             {
@@ -32,7 +32,7 @@ public class CGC003_BoxingTests
     public async Task AnnotatedMethod_ExplicitBoxing_FiresCGC003()
     {
         var source = """
-            using MustNotAllocate;
+            using CallgraphClosure.Attributes;
 
             class C
             {
@@ -54,7 +54,7 @@ public class CGC003_BoxingTests
     public async Task AnnotatedMethod_NoBoxing_FiresNothing()
     {
         var source = """
-            using MustNotAllocate;
+            using CallgraphClosure.Attributes;
 
             class C
             {

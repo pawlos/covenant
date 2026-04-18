@@ -20,7 +20,7 @@ public static class CSharpAnalyzerVerifier<TAnalyzer>
                 System.IO.Path.Combine("ref", "net10.0"));
             TestState.AdditionalReferences.Add(
                 MetadataReference.CreateFromFile(
-                    typeof(MustNotAllocateAttribute).Assembly.Location));
+                    typeof(CallgraphClosure.Attributes.MustNotAllocateAttribute).Assembly.Location));
         }
     }
 

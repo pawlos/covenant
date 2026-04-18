@@ -11,7 +11,7 @@ public class CGC002_ExternalBoundaryTests
     {
         var source = """
             using System;
-            using MustNotAllocate;
+            using CallgraphClosure.Attributes;
 
             class C
             {

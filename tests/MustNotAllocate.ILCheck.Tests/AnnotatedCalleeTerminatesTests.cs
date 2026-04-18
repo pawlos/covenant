@@ -20,7 +20,7 @@ public class AnnotatedCalleeTerminatesTests
         // Helper is annotated but allocates. Caller trusts Helper — no diagnostic attributed
         // to Caller. Helper's own walk finds the allocation and attributes it to Helper.
         var source = """
-            using MustNotAllocate;
+            using CallgraphClosure.Attributes;
 
             public class C
             {

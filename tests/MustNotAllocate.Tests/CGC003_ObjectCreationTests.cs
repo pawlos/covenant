@@ -10,7 +10,7 @@ public class CGC003_ObjectCreationTests
     public async Task AnnotatedMethod_CreatesSourceObject_FiresCGC003AndCGC001()
     {
         var source = """
-            using MustNotAllocate;
+            using CallgraphClosure.Attributes;
 
             class Foo { public Foo() {} }
 
@@ -40,7 +40,7 @@ public class CGC003_ObjectCreationTests
     {
         var source = """
             using System.Text;
-            using MustNotAllocate;
+            using CallgraphClosure.Attributes;
 
             class C
             {
@@ -69,7 +69,7 @@ public class CGC003_ObjectCreationTests
         // Structs are stack-allocated; no CGC003. But the ctor still counts as a call
         // boundary if unannotated — so we expect CGC001 only.
         var source = """
-            using MustNotAllocate;
+            using CallgraphClosure.Attributes;
 
             struct Point { public Point(int x) {} }
 

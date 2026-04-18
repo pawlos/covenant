@@ -10,15 +10,18 @@ public sealed class ClosureWalker
     private readonly string _attributeFullName;
     private readonly ImmutableArray<IIlSink> _sinks;
     private readonly string _propertyName;
+    private readonly string? _amortizedAttributeFullName;
 
     public ClosureWalker(
         string attributeFullName,
         ImmutableArray<IIlSink> sinks,
-        string propertyName)
+        string propertyName,
+        string? amortizedAttributeFullName = null)
     {
         _attributeFullName = attributeFullName;
         _sinks = sinks;
         _propertyName = propertyName;
+        _amortizedAttributeFullName = amortizedAttributeFullName;
     }
 
     public ImmutableArray<Diagnostic> Analyze(AssemblyDefinition assembly)
@@ -29,7 +32,7 @@ public sealed class ClosureWalker
         {
             foreach (var method in type.Methods)
             {
-                if (!HasPropagatingAttribute(method)) continue;
+                if (!HasAttributeByFullName(method, _attributeFullName)) continue;
 
                 var visited = new HashSet<string>();
                 VisitMethodBody(
@@ -86,7 +89,13 @@ public sealed class ClosureWalker
             }
 
             // Annotated callee terminates the walk — it made the same promise.
-            if (resolved is not null && HasPropagatingAttribute(resolved))
+            if (resolved is not null && HasAttributeByFullName(resolved, _attributeFullName))
+                continue;
+
+            // Amortized callee terminates the walk — allocation is pre-paid.
+            if (resolved is not null &&
+                _amortizedAttributeFullName is not null &&
+                HasAttributeByFullName(resolved, _amortizedAttributeFullName))
                 continue;
 
             // Walkable body: recurse. Sinks inside become CGC003 attributed to annotatedCaller
@@ -128,11 +137,11 @@ public sealed class ClosureWalker
         return null;
     }
 
-    private bool HasPropagatingAttribute(MethodDefinition method)
+    private static bool HasAttributeByFullName(MethodDefinition method, string attributeFullName)
     {
         foreach (var attr in method.CustomAttributes)
         {
-            if (attr.AttributeType.FullName == _attributeFullName)
+            if (attr.AttributeType.FullName == attributeFullName)
                 return true;
         }
         return false;

@@ -8,6 +8,8 @@ public static class MustNotAllocateIlAnalyzer
 {
     public const string AttributeFullName = "CallgraphClosure.Attributes.MustNotAllocateAttribute";
 
+    public const string AmortizedAttributeFullName = "CallgraphClosure.Attributes.AmortizedAllocationAttribute";
+
     public static ImmutableArray<IIlSink> Sinks { get; } =
         ImmutableArray.Create<IIlSink>(
             new NewObjSink(),

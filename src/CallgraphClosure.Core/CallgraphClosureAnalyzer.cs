@@ -34,13 +34,62 @@ public abstract class CallgraphClosureAnalyzer : DiagnosticAnalyzer
             ? null
             : c.Compilation.GetTypeByMetadataName(_config.AmortizedAttributeFullName);
 
-        c.RegisterOperationBlockAction(b => AnalyzeBlock(b, attrSym, amortizedSym, c.Compilation));
+        var amortizedFileMethods = LoadAmortizedFileMethods(
+            c.Options.AdditionalFiles, c.CancellationToken);
+
+        c.RegisterOperationBlockAction(b =>
+            AnalyzeBlock(b, attrSym, amortizedSym, amortizedFileMethods, c.Compilation));
+    }
+
+    private ImmutableHashSet<string> LoadAmortizedFileMethods(
+        ImmutableArray<AdditionalText> additionalFiles,
+        System.Threading.CancellationToken cancellationToken)
+    {
+        foreach (var file in additionalFiles)
+        {
+            if (System.IO.Path.GetFileName(file.Path) != _config.AmortizedFileName)
+                continue;
+
+            var text = file.GetText(cancellationToken);
+            if (text is null) continue;
+
+            try
+            {
+                return ParseAmortizedJson(text.ToString());
+            }
+            catch (System.FormatException)
+            {
+                return ImmutableHashSet<string>.Empty;
+            }
+        }
+        return ImmutableHashSet<string>.Empty;
+    }
+
+    private static ImmutableHashSet<string> ParseAmortizedJson(string json)
+    {
+        using var doc = System.Text.Json.JsonDocument.Parse(json);
+        if (!doc.RootElement.TryGetProperty("amortized_methods", out var arr))
+            return ImmutableHashSet<string>.Empty;
+
+        if (arr.ValueKind != System.Text.Json.JsonValueKind.Array)
+            return ImmutableHashSet<string>.Empty;
+
+        var builder = ImmutableHashSet.CreateBuilder<string>();
+        foreach (var element in arr.EnumerateArray())
+        {
+            if (element.ValueKind != System.Text.Json.JsonValueKind.String) continue;
+            var name = element.GetString();
+            if (!string.IsNullOrWhiteSpace(name))
+                builder.Add(name!);
+        }
+        return builder.ToImmutable();
     }
 
     private void AnalyzeBlock(
         OperationBlockAnalysisContext b,
         INamedTypeSymbol attrSym,
         INamedTypeSymbol? amortizedSym,
+        ImmutableHashSet<string> amortizedFileMethods,
         Compilation compilation)
     {
         if (b.OwningSymbol is not IMethodSymbol caller) return;
@@ -50,7 +99,7 @@ public abstract class CallgraphClosureAnalyzer : DiagnosticAnalyzer
         {
             foreach (var op in block.DescendantsAndSelf())
             {
-                VisitOp(op, caller, attrSym, amortizedSym, compilation, b);
+                VisitOp(op, caller, attrSym, amortizedSym, amortizedFileMethods, compilation, b);
             }
         }
     }
@@ -60,11 +109,10 @@ public abstract class CallgraphClosureAnalyzer : DiagnosticAnalyzer
         IMethodSymbol caller,
         INamedTypeSymbol attrSym,
         INamedTypeSymbol? amortizedSym,
+        ImmutableHashSet<string> amortizedFileMethods,
         Compilation compilation,
         OperationBlockAnalysisContext b)
     {
-        // Skip object creations that are attribute applications — those are not
-        // runtime allocations in the annotated method body.
         if (op is IObjectCreationOperation && op.Parent is IAttributeOperation) return;
 
         foreach (var sink in _config.Sinks)
@@ -92,6 +140,7 @@ public abstract class CallgraphClosureAnalyzer : DiagnosticAnalyzer
         var original = target.OriginalDefinition;
         if (HasAttribute(original, attrSym)) return;
         if (amortizedSym is not null && HasAttribute(original, amortizedSym)) return;
+        if (amortizedFileMethods.Contains(SymbolFqn(original))) return;
 
         var isExternal = !SymbolEqualityComparer.Default.Equals(
             original.ContainingAssembly, compilation.Assembly);
@@ -110,6 +159,14 @@ public abstract class CallgraphClosureAnalyzer : DiagnosticAnalyzer
             caller.Name,
             attrSym.Name,
             targetName));
+    }
+
+    private static string SymbolFqn(IMethodSymbol method)
+    {
+        // Produce a Roslyn-display FQN: "ContainingType.MethodName(ParamType1, ParamType2)"
+        var paramList = string.Join(", ",
+            method.Parameters.Select(p => p.Type.ToDisplayString()));
+        return $"{method.ContainingType.ToDisplayString()}.{method.Name}({paramList})";
     }
 
     private static bool HasAttribute(ISymbol symbol, INamedTypeSymbol attrSym) =>

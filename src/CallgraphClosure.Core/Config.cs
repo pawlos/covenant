@@ -6,4 +6,5 @@ public sealed record Config(
     string AttributeFullName,
     PropagationDirection Direction,
     ImmutableArray<ISink> Sinks,
-    string? AmortizedAttributeFullName = null);
+    string? AmortizedAttributeFullName = null,
+    string AmortizedFileName = "amortized-methods.json");

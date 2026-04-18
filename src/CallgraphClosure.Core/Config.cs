@@ -5,4 +5,5 @@ namespace CallgraphClosure.Core;
 public sealed record Config(
     string AttributeFullName,
     PropagationDirection Direction,
-    ImmutableArray<ISink> Sinks);
+    ImmutableArray<ISink> Sinks,
+    string? AmortizedAttributeFullName = null);

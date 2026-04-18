@@ -15,5 +15,6 @@ public sealed class MustNotAllocateAnalyzer : CallgraphClosureAnalyzer
         Sinks: ImmutableArray.Create<ISink>(
             new ObjectCreationSink(),
             new ArrayCreationSink(),
-            new BoxingConversionSink()))) { }
+            new BoxingConversionSink()),
+        AmortizedAttributeFullName: "CallgraphClosure.Attributes.AmortizedAllocationAttribute")) { }
 }

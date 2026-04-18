@@ -30,12 +30,17 @@ public abstract class CallgraphClosureAnalyzer : DiagnosticAnalyzer
         var attrSym = c.Compilation.GetTypeByMetadataName(_config.AttributeFullName);
         if (attrSym is null) return;
 
-        c.RegisterOperationBlockAction(b => AnalyzeBlock(b, attrSym, c.Compilation));
+        var amortizedSym = _config.AmortizedAttributeFullName is null
+            ? null
+            : c.Compilation.GetTypeByMetadataName(_config.AmortizedAttributeFullName);
+
+        c.RegisterOperationBlockAction(b => AnalyzeBlock(b, attrSym, amortizedSym, c.Compilation));
     }
 
     private void AnalyzeBlock(
         OperationBlockAnalysisContext b,
         INamedTypeSymbol attrSym,
+        INamedTypeSymbol? amortizedSym,
         Compilation compilation)
     {
         if (b.OwningSymbol is not IMethodSymbol caller) return;
@@ -45,7 +50,7 @@ public abstract class CallgraphClosureAnalyzer : DiagnosticAnalyzer
         {
             foreach (var op in block.DescendantsAndSelf())
             {
-                VisitOp(op, caller, attrSym, compilation, b);
+                VisitOp(op, caller, attrSym, amortizedSym, compilation, b);
             }
         }
     }
@@ -54,6 +59,7 @@ public abstract class CallgraphClosureAnalyzer : DiagnosticAnalyzer
         IOperation op,
         IMethodSymbol caller,
         INamedTypeSymbol attrSym,
+        INamedTypeSymbol? amortizedSym,
         Compilation compilation,
         OperationBlockAnalysisContext b)
     {
@@ -85,6 +91,7 @@ public abstract class CallgraphClosureAnalyzer : DiagnosticAnalyzer
 
         var original = target.OriginalDefinition;
         if (HasAttribute(original, attrSym)) return;
+        if (amortizedSym is not null && HasAttribute(original, amortizedSym)) return;
 
         var isExternal = !SymbolEqualityComparer.Default.Equals(
             original.ContainingAssembly, compilation.Assembly);
@@ -93,8 +100,6 @@ public abstract class CallgraphClosureAnalyzer : DiagnosticAnalyzer
             ? Diagnostics.ExternalBoundary
             : Diagnostics.SourceBoundary;
 
-        // For constructors, use the containing type name (e.g. "Foo") rather than
-        // the method name (".ctor") so diagnostics are more readable.
         var targetName = op is IObjectCreationOperation
             ? original.ContainingType.Name
             : original.Name;

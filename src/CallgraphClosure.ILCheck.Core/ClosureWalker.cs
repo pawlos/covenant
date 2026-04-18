@@ -11,17 +11,20 @@ public sealed class ClosureWalker
     private readonly ImmutableArray<IIlSink> _sinks;
     private readonly string _propertyName;
     private readonly string? _amortizedAttributeFullName;
+    private readonly AmortizedSet _amortizedSet;
 
     public ClosureWalker(
         string attributeFullName,
         ImmutableArray<IIlSink> sinks,
         string propertyName,
-        string? amortizedAttributeFullName = null)
+        string? amortizedAttributeFullName = null,
+        AmortizedSet? amortizedSet = null)
     {
         _attributeFullName = attributeFullName;
         _sinks = sinks;
         _propertyName = propertyName;
         _amortizedAttributeFullName = amortizedAttributeFullName;
+        _amortizedSet = amortizedSet ?? AmortizedSet.Empty;
     }
 
     public ImmutableArray<Diagnostic> Analyze(AssemblyDefinition assembly)
@@ -96,6 +99,9 @@ public sealed class ClosureWalker
             if (resolved is not null &&
                 _amortizedAttributeFullName is not null &&
                 HasAttributeByFullName(resolved, _amortizedAttributeFullName))
+                continue;
+
+            if (resolved is not null && _amortizedSet.Contains(resolved.FullName))
                 continue;
 
             // Walkable body: recurse. Sinks inside become CGC003 attributed to annotatedCaller

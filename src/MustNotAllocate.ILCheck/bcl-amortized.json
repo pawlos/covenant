@@ -1,0 +1,6 @@
+{
+  "amortized_methods": [
+    "T[] System.Buffers.ArrayPool`1::Rent(System.Int32)",
+    "T System.Buffers.MemoryPool`1::Rent(System.Int32)"
+  ]
+}

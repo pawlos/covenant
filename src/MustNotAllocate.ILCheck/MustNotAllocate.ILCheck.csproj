@@ -6,8 +6,8 @@
     <ProjectReference Include="..\CallgraphClosure.ILCheck.Core\CallgraphClosure.ILCheck.Core.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="bcl-amortized.json">
+    <Content Include="bcl-amortized.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    </Content>
   </ItemGroup>
 </Project>

@@ -1,0 +1,3 @@
+src/Showcase.Http.Naive/RequestLineParser.cs(15,19): warning CGC003: Method 'Parse' is annotated [MustNotAllocateAttribute] but contains a object allocation [src/Showcase.Http.Naive/Showcase.Http.Naive.csproj]
+src/Showcase.Http.Naive/RequestLineParser.cs(35,16): warning CGC003: Method 'Parse' is annotated [MustNotAllocateAttribute] but contains a object allocation [src/Showcase.Http.Naive/Showcase.Http.Naive.csproj]
+src/Showcase.Http.Naive/RequestReader.cs(15,22): warning CGC003: Method 'ReadNext' is annotated [MustNotAllocateAttribute] but contains a array allocation [src/Showcase.Http.Naive/Showcase.Http.Naive.csproj]

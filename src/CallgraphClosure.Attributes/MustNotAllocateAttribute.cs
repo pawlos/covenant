@@ -1,6 +1,6 @@
 using System;
 
-namespace MustNotAllocate;
+namespace CallgraphClosure.Attributes;
 
 [AttributeUsage(
     AttributeTargets.Method | AttributeTargets.Constructor,

@@ -2,6 +2,19 @@
 
 Captured: 2026-04-17 on .NET 10.0.3 (10.0.326.7603), X64 RyuJIT AVX2, WSL2 (Linux 6.6.87.1-microsoft-standard-WSL2)
 
+## How this was run
+
+```bash
+dotnet run -c Release --project bench/Showcase.Http.Benchmarks/ -- --filter '*'
+```
+
+- **Release configuration is mandatory** — Debug numbers are misleading (both variants slower by a large constant factor, but the ratio between them also shifts because Debug suppresses inlining).
+- **`--filter '*'`** runs every `[Benchmark]` in the assembly. Pass `--filter '*Parse*'` or `'*Read*'` to run one group.
+- **BenchmarkDotNet does its own isolated build and cold-start per benchmark** — no extra `dotnet build` needed. Expect 1-5 minutes of wall time for all four benchmarks.
+- **`[MemoryDiagnoser]`** on each class produces the `Allocated` and `Gen0` columns. Without it BDN reports only timing.
+- **No custom `[SimpleJob]` or config** — default BDN job (full warmup, multiple iterations, statistical reporting). For quick sanity checks add `[ShortRunJob]`, but published numbers should use the default.
+- **WSL2 caveat:** WSL2's clock resolution is fine but sporadic scheduler preemption can widen the StdDev on short benchmarks. The 4.16 ns StdDev on the 53 ns Naive Parse is at the upper edge of what's acceptable; results on bare metal would tighten that. Ratios stay stable either way.
+
 ## ParseBenchmarks
 
 | Method    | Mean      | Error     | StdDev    | Ratio | Gen0   | Allocated | Alloc Ratio |

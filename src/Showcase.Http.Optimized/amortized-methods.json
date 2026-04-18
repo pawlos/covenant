@@ -1,0 +1,5 @@
+{
+  "amortized_methods": [
+    "System.Buffers.ArrayPool<T>.Rent(int)"
+  ]
+}

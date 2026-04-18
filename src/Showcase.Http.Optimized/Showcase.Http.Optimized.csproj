@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="$(MSBuildThisFileDirectory)..\Showcase.Http.Common\bin\$(Configuration)\net10.0\Showcase.Http.Common.dll" />
+    <!-- Load analyzers from pre-built DLLs (absolute paths, same pattern as Showcase.Http.Naive) -->
+    <Analyzer Include="$(MSBuildThisFileDirectory)..\MustNotAllocate\bin\$(Configuration)\netstandard2.0\MustNotAllocate.dll" />
+    <Analyzer Include="$(MSBuildThisFileDirectory)..\CallgraphClosure.Core\bin\$(Configuration)\netstandard2.0\CallgraphClosure.Core.dll" />
+    <!-- Reference CallgraphClosure.Attributes so [MustNotAllocate] attribute type resolves -->
+    <Reference Include="$(MSBuildThisFileDirectory)..\CallgraphClosure.Attributes\bin\$(Configuration)\netstandard2.0\CallgraphClosure.Attributes.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <AdditionalFiles Include="amortized-methods.json" />
+  </ItemGroup>
+</Project>

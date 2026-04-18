@@ -1,6 +1,26 @@
 {
   "amortized_methods": [
     "T[] System.Buffers.ArrayPool`1::Rent(System.Int32)",
-    "T System.Buffers.MemoryPool`1::Rent(System.Int32)"
+    "System.Void System.Buffers.ArrayPool`1::Return(T[],System.Boolean)",
+    "System.Buffers.ArrayPool`1<T> System.Buffers.ArrayPool`1::get_Shared()",
+    "T System.Buffers.MemoryPool`1::Rent(System.Int32)",
+    "System.Int32 System.MemoryExtensions::IndexOf(System.ReadOnlySpan`1<T>,T)",
+    "System.Int32 System.MemoryExtensions::IndexOf(System.ReadOnlySpan`1<T>,System.ReadOnlySpan`1<T>)",
+    "System.Int32 System.MemoryExtensions::IndexOfAny(System.ReadOnlySpan`1<T>,T,T)",
+    "System.Int32 System.MemoryExtensions::IndexOfAny(System.ReadOnlySpan`1<T>,System.ReadOnlySpan`1<T>)",
+    "System.Int32 System.MemoryExtensions::IndexOfAnyInRange(System.ReadOnlySpan`1<T>,T,T)",
+    "System.Int32 System.MemoryExtensions::IndexOfAnyExcept(System.ReadOnlySpan`1<T>,T)",
+    "System.Int32 System.MemoryExtensions::LastIndexOf(System.ReadOnlySpan`1<T>,T)",
+    "System.Boolean System.MemoryExtensions::SequenceEqual(System.ReadOnlySpan`1<T>,System.ReadOnlySpan`1<T>)",
+    "System.Boolean System.MemoryExtensions::StartsWith(System.ReadOnlySpan`1<T>,System.ReadOnlySpan`1<T>)",
+    "System.Boolean System.MemoryExtensions::EndsWith(System.ReadOnlySpan`1<T>,System.ReadOnlySpan`1<T>)",
+    "System.Boolean System.MemoryExtensions::Contains(System.ReadOnlySpan`1<T>,T)",
+    "System.Boolean System.Runtime.CompilerServices.RuntimeHelpers::IsBitwiseEquatable()",
+    "System.Int32 System.IO.Stream::Read(System.Byte[],System.Int32,System.Int32)",
+    "System.Int32 System.IO.Stream::Read(System.Span`1<System.Byte>)",
+    "System.ReadOnlySpan`1<T> System.ReadOnlySpan`1::Slice(System.Int32)",
+    "System.ReadOnlySpan`1<T> System.ReadOnlySpan`1::Slice(System.Int32,System.Int32)",
+    "System.Span`1<T> System.Span`1::Slice(System.Int32)",
+    "System.Span`1<T> System.Span`1::Slice(System.Int32,System.Int32)"
   ]
 }

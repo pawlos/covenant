@@ -176,8 +176,8 @@ If HN picks it up for the front page, the thing to have ready is a fast, honest 
 
 ## What still needs to be done before any of this posts
 
-1. Confirm `RequiresAttributeMismatchAnalyzer` is the correct ILLink class name (§2 of the long draft).
-2. Verify the Ferrocene article URL is stable.
-3. Fill in the repo URL placeholder (`<TBD>`).
+1. ~~Confirm the ILLink analyzer class name~~ — done. Correct name is `RequiresAnalyzerBase` (abstract) with three concrete subclasses. §2 of the long draft updated (2026-04-19).
+2. ~~Verify the Ferrocene article URL~~ — done. Correct URL is `https://ferrous-systems.com/blog/callgraph-analysis/` (article title: "Callgraph analysis"). Updated (2026-04-19).
+3. Fill in the repo URL placeholder (`<TBD>`) in both `draft.md` and `social.md`.
 4. Add two IDE screenshots (VS + Rider with squiggles; Naive project's Error List).
 5. One proof-reading pass by a human whose first reaction to "callgraph closure" isn't "yes, obviously."

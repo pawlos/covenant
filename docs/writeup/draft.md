@@ -6,7 +6,7 @@
 
 ## 1. The prompt that wouldn't let go
 
-A few weeks ago I read Ferrous Systems' article on the [callgraph-closure lint Ferrocene built for IEC 61508 certification][ferrocene-article]. The mechanism is simple enough that you can describe it in a paragraph: attach a custom attribute to a function to mark it as "validated." If any unvalidated function calls a validated one, emit a diagnostic. Run this at both the pre-monomorphization and post-monomorphization phases of the compiler, so you catch violations both at edit time (fast feedback for developers) and after generics have been specialized (sound for the final binary). Apply the attribute to every function in `core` that the validation evidence covers, and now the compiler enforces a boundary you previously had to maintain by vigilance.
+A few weeks ago I read Ferrous Systems' article on the [callgraph analysis Ferrocene built for IEC 61508 certification][ferrocene-article]. The mechanism is simple enough that you can describe it in a paragraph: attach a custom attribute to a function to mark it as "validated." If any unvalidated function calls a validated one, emit a diagnostic. Run this at both the pre-monomorphization and post-monomorphization phases of the compiler, so you catch violations both at edit time (fast feedback for developers) and after generics have been specialized (sound for the final binary). Apply the attribute to every function in `core` that the validation evidence covers, and now the compiler enforces a boundary you previously had to maintain by vigilance.
 
 It's a genuinely elegant technique, and it's the kind of thing that would be a significant engineering effort to retrofit into any large toolchain. Which is why, as I finished the article, I had one surprisingly concrete thought:
 
@@ -45,7 +45,7 @@ Here's the side-by-side I wish I'd seen when I first read the Ferrocene article:
 
 Three observations from this table that do most of the work of the article:
 
-**Observation 1: the trimmer's analyzer *is* a callgraph-closure lint.** The Microsoft-shipped `ILLink.Analyzers` package has an abstract class called `RequiresAttributeMismatchAnalyzer` that walks method bodies looking for calls where the caller lacks an attribute and the callee has it. If you replace "RequiresUnreferencedCode" with "your attribute" throughout the source, you get exactly the edit-time half of a Ferrocene-style lint. Microsoft wrote it. It's in the reference source. The only thing hardcoded is which attribute it looks for.
+**Observation 1: the trimmer's Roslyn analyzer is parameterized by attribute name.** In `dotnet/runtime` under `src/tools/illink/src/ILLink.RoslynAnalyzer/`, there's an abstract class called `RequiresAnalyzerBase`. Three concrete subclasses — `RequiresUnreferencedCodeAnalyzer`, `RequiresDynamicCodeAnalyzer`, and `RequiresAssemblyFilesAnalyzer` — each specialize it primarily by overriding a single property, `RequiresAttributeFullyQualifiedName`, plus a few hooks for message formatting and custom diagnostic wording. The base class handles the actual work: attribute-mismatch checks across overrides and interface implementations, constructor constraints on generic type parameters, entry-point and static-constructor validation, and call-site patterns between annotated and unannotated methods. **The attribute each analyzer looks for is literally a subclass configuration string.** Microsoft's three shipped predicates differ in that one FQN and their diagnostic wording; everything else is shared. Writing a fourth is what this article is about.
 
 **Observation 2: the two-pass architecture was not invented by Ferrocene, and it wasn't invented by Microsoft. It's the natural shape of the problem.** You need edit-time feedback (otherwise your developers resent the tool). You need post-link soundness (otherwise your certification evidence has holes). Those are different phases of compilation with different information available. If your toolchain has both a semantic analyzer and a post-link pass — and every modern toolchain does — you get this shape whether you want it or not. Ferrocene describes it clearly; the trimmer implements it without the ceremony of naming what it is.
 
@@ -460,4 +460,4 @@ The one real rough edge is analyzer packaging: the sample project uses an absolu
 
 The framework was already here. Someone just had to say so.
 
-[ferrocene-article]: https://ferrous-systems.com/blog/rustc-callgraph-closure-lint/
+[ferrocene-article]: https://ferrous-systems.com/blog/callgraph-analysis/

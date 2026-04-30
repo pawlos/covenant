@@ -22,7 +22,7 @@ public class CGC003_BoxingTests
         var expected = CSharpAnalyzerVerifier<MustNotAllocateAnalyzer>
             .Diagnostic(Diagnostics.SinkHit)
             .WithLocation(6, 32)
-            .WithArguments("Caller", "MustNotAllocateAttribute", "boxing");
+            .WithArguments("Caller", "MustNotAllocateAttribute", "boxing conversion");
 
         await CSharpAnalyzerVerifier<MustNotAllocateAnalyzer>
             .VerifyAnalyzerAsync(source, expected);
@@ -44,7 +44,7 @@ public class CGC003_BoxingTests
         var expected = CSharpAnalyzerVerifier<MustNotAllocateAnalyzer>
             .Diagnostic(Diagnostics.SinkHit)
             .WithLocation(6, 32)
-            .WithArguments("Caller", "MustNotAllocateAttribute", "boxing");
+            .WithArguments("Caller", "MustNotAllocateAttribute", "boxing conversion");
 
         await CSharpAnalyzerVerifier<MustNotAllocateAnalyzer>
             .VerifyAnalyzerAsync(source, expected);

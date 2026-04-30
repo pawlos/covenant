@@ -7,6 +7,7 @@ namespace Showcase.Http.Naive;
 public static class RequestLineParser
 {
     [MustNotAllocate]
+    [MustNotThrow]
     public static NaiveParsedRequest Parse(string line)
     {
         // Allocations all over the place — every one is intentional.

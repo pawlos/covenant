@@ -11,6 +11,6 @@ public sealed class ObjectCreationSink : ISink
         if (op is not IObjectCreationOperation oc) return null;
         // Struct construction is stack allocation, not a heap allocation.
         if (oc.Type is null || oc.Type.IsValueType) return null;
-        return "object";
+        return "object allocation";
     }
 }

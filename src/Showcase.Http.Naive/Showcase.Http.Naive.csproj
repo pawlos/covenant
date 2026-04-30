@@ -7,6 +7,7 @@
     <ProjectReference Include="..\Showcase.Http.Common\Showcase.Http.Common.csproj" />
     <!-- Load analyzers from pre-built DLLs (absolute paths, same pattern as MustNotAllocate.Sample) -->
     <Analyzer Include="$(MSBuildThisFileDirectory)..\MustNotAllocate\bin\$(Configuration)\netstandard2.0\MustNotAllocate.dll" />
+    <Analyzer Include="$(MSBuildThisFileDirectory)..\MustNotThrow\bin\$(Configuration)\netstandard2.0\MustNotThrow.dll" />
     <Analyzer Include="$(MSBuildThisFileDirectory)..\CallgraphClosure.Core\bin\$(Configuration)\netstandard2.0\CallgraphClosure.Core.dll" />
     <!-- Reference CallgraphClosure.Attributes so [MustNotAllocate] attribute type resolves -->
     <Reference Include="$(MSBuildThisFileDirectory)..\CallgraphClosure.Attributes\bin\$(Configuration)\netstandard2.0\CallgraphClosure.Attributes.dll" />

@@ -41,6 +41,6 @@ public class CycleGuardTests
             .ToImmutableArray();
 
         Assert.Single(sinkHits);
-        Assert.Equal("array", sinkHits[0].SinkLabel);
+        Assert.Equal("array allocation", sinkHits[0].SinkLabel);
     }
 }

@@ -24,7 +24,7 @@ public class CGC003_ObjectCreationTests
         var sink = CSharpAnalyzerVerifier<MustNotAllocateAnalyzer>
             .Diagnostic(Diagnostics.SinkHit)
             .WithLocation(8, 29)
-            .WithArguments("Caller", "MustNotAllocateAttribute", "object");
+            .WithArguments("Caller", "MustNotAllocateAttribute", "object allocation");
 
         var ctorEdge = CSharpAnalyzerVerifier<MustNotAllocateAnalyzer>
             .Diagnostic(Diagnostics.SourceBoundary)
@@ -52,7 +52,7 @@ public class CGC003_ObjectCreationTests
         var sink = CSharpAnalyzerVerifier<MustNotAllocateAnalyzer>
             .Diagnostic(Diagnostics.SinkHit)
             .WithLocation(7, 29)
-            .WithArguments("Caller", "MustNotAllocateAttribute", "object");
+            .WithArguments("Caller", "MustNotAllocateAttribute", "object allocation");
 
         var ctorEdge = CSharpAnalyzerVerifier<MustNotAllocateAnalyzer>
             .Diagnostic(Diagnostics.ExternalBoundary)

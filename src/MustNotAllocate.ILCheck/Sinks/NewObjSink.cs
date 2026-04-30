@@ -14,6 +14,6 @@ public sealed class NewObjSink : IIlSink
         // Struct construction via newobj on a value type does not heap-allocate.
         if (ctor.DeclaringType.IsValueType) return null;
 
-        return "object";
+        return "object allocation";
     }
 }

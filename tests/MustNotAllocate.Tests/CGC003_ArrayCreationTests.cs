@@ -22,7 +22,7 @@ public class CGC003_ArrayCreationTests
         var expected = CSharpAnalyzerVerifier<MustNotAllocateAnalyzer>
             .Diagnostic(Diagnostics.SinkHit)
             .WithLocation(6, 29)
-            .WithArguments("Caller", "MustNotAllocateAttribute", "array");
+            .WithArguments("Caller", "MustNotAllocateAttribute", "array allocation");
 
         await CSharpAnalyzerVerifier<MustNotAllocateAnalyzer>
             .VerifyAnalyzerAsync(source, expected);
@@ -44,7 +44,7 @@ public class CGC003_ArrayCreationTests
         var expected = CSharpAnalyzerVerifier<MustNotAllocateAnalyzer>
             .Diagnostic(Diagnostics.SinkHit)
             .WithLocation(6, 29)
-            .WithArguments("Caller", "MustNotAllocateAttribute", "array");
+            .WithArguments("Caller", "MustNotAllocateAttribute", "array allocation");
 
         await CSharpAnalyzerVerifier<MustNotAllocateAnalyzer>
             .VerifyAnalyzerAsync(source, expected);

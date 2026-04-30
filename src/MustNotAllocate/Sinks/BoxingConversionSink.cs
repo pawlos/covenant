@@ -13,6 +13,6 @@ public sealed class BoxingConversionSink : ISink
         // IConversionOperation.Conversion is CommonConversion which lacks IsBoxing.
         // Use the C#-specific extension that returns a Microsoft.CodeAnalysis.CSharp.Conversion.
         var csharpConversion = Microsoft.CodeAnalysis.CSharp.CSharpExtensions.GetConversion(conv);
-        return csharpConversion.IsBoxing ? "boxing" : null;
+        return csharpConversion.IsBoxing ? "boxing conversion" : null;
     }
 }

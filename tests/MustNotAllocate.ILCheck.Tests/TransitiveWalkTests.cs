@@ -38,7 +38,7 @@ public class TransitiveWalkTests
         var diagnostics = BuildWalker().Analyze(assembly);
 
         var sinkHits = diagnostics
-            .Where(d => d.Id == DiagnosticIds.SinkHit && d.SinkLabel == "array")
+            .Where(d => d.Id == DiagnosticIds.SinkHit && d.SinkLabel == "array allocation")
             .ToImmutableArray();
 
         Assert.Single(sinkHits);
@@ -72,7 +72,7 @@ public class TransitiveWalkTests
         var diagnostics = BuildWalker().Analyze(assembly);
 
         var sinkHits = diagnostics
-            .Where(d => d.Id == DiagnosticIds.SinkHit && d.SinkLabel == "array")
+            .Where(d => d.Id == DiagnosticIds.SinkHit && d.SinkLabel == "array allocation")
             .ToImmutableArray();
 
         Assert.Single(sinkHits);

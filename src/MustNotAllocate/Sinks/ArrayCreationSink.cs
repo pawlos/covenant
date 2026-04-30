@@ -7,5 +7,5 @@ namespace MustNotAllocate.Sinks;
 public sealed class ArrayCreationSink : ISink
 {
     public string? Match(IOperation op) =>
-        op is IArrayCreationOperation ? "array" : null;
+        op is IArrayCreationOperation ? "array allocation" : null;
 }

@@ -25,7 +25,7 @@ public static class Diagnostics
     public static readonly DiagnosticDescriptor SinkHit = new(
         id: "CGC003",
         title: "Annotated method contains a property-specific sink",
-        messageFormat: "Method '{0}' is annotated [{1}] but contains a {2} allocation",
+        messageFormat: "Method '{0}' is annotated [{1}] but contains a {2}",
         category: Category,
         defaultSeverity: DiagnosticSeverity.Warning,
         isEnabledByDefault: true);

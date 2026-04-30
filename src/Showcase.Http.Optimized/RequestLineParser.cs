@@ -11,6 +11,7 @@ public static class RequestLineParser
     /// Returns false if the line is malformed.
     /// </summary>
     [MustNotAllocate]
+    [MustNotThrow]
     public static bool TryParse(ReadOnlySpan<byte> line, out OptimizedParsedRequest result)
     {
         result = default;

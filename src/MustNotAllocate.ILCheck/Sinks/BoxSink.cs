@@ -6,5 +6,5 @@ namespace MustNotAllocate.ILCheck.Sinks;
 public sealed class BoxSink : IIlSink
 {
     public string? Match(Instruction instruction) =>
-        instruction.OpCode == OpCodes.Box ? "boxing" : null;
+        instruction.OpCode == OpCodes.Box ? "boxing conversion" : null;
 }

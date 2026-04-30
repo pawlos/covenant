@@ -50,7 +50,7 @@ public class EndToEndSampleTests
         // Must find at least the direct array allocation inside Tick.
         var directArray = diagnostics.FirstOrDefault(d =>
             d.Id == DiagnosticIds.SinkHit &&
-            d.SinkLabel == "array" &&
+            d.SinkLabel == "array allocation" &&
             d.AnnotatedCaller.Name == "Tick" &&
             d.Chain.Length == 1);
 

@@ -39,7 +39,7 @@ public class DirectSinkTests
             .ToImmutableArray();
 
         Assert.Single(sinkHits);
-        Assert.Equal("array", sinkHits[0].SinkLabel);
+        Assert.Equal("array allocation", sinkHits[0].SinkLabel);
         Assert.Equal("Caller", sinkHits[0].AnnotatedCaller.Name);
     }
 
@@ -67,7 +67,7 @@ public class DirectSinkTests
 
         var sinkHits = diagnostics.Where(d => d.Id == DiagnosticIds.SinkHit).ToImmutableArray();
         Assert.Single(sinkHits);
-        Assert.Equal("object", sinkHits[0].SinkLabel);
+        Assert.Equal("object allocation", sinkHits[0].SinkLabel);
     }
 
     [Fact]
@@ -92,7 +92,7 @@ public class DirectSinkTests
 
         var sinkHits = diagnostics.Where(d => d.Id == DiagnosticIds.SinkHit).ToImmutableArray();
         Assert.Single(sinkHits);
-        Assert.Equal("boxing", sinkHits[0].SinkLabel);
+        Assert.Equal("boxing conversion", sinkHits[0].SinkLabel);
     }
 
     [Fact]

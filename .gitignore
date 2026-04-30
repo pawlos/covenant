@@ -15,6 +15,9 @@ obj/
 *.nupkg
 packages/
 
+# BenchmarkDotNet
+BenchmarkDotNet.Artifacts/
+
 # OS
 .DS_Store
 Thumbs.db

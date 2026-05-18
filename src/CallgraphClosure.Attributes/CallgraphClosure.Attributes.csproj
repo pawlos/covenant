@@ -1,7 +1,14 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-  </PropertyGroup>
 
+    <IsPackable>true</IsPackable>
+    <PackageId>CallgraphClosure.Attributes</PackageId>
+    <Title>CallgraphClosure.Attributes</Title>
+    <Description>Attribute types ([MustNotAllocate], [MustNotThrow], [MustNotBlock], [MustNotRecurse], [AmortizedAllocation]) for the CallgraphClosure family of Roslyn property analyzers. Installed transitively when you add a CallgraphClosure analyzer package — no need to install directly. Pre-release.</Description>
+    <PackageTags>roslyn;analyzer;attributes;callgraph;closure</PackageTags>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="NUGET-README.md" Pack="true" PackagePath="\" Visible="false" />
+  </ItemGroup>
 </Project>

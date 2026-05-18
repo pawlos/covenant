@@ -4,9 +4,20 @@
     <TargetFramework>net10.0</TargetFramework>
     <AssemblyName>cgc-ilcheck</AssemblyName>
     <RootNamespace>CallgraphClosure.ILCheck.Cli</RootNamespace>
+
+    <IsPackable>true</IsPackable>
+    <PackageId>CallgraphClosure.ILCheck</PackageId>
+    <Title>CallgraphClosure.ILCheck</Title>
+    <Description>Cecil-based IL post-pass for the CallgraphClosure property analyzers. Resolves the edit-time-deferred CGC002 diagnostics by walking the IL of the built assembly graph. Installs as a `dotnet tool`. Pre-release: currently covers [MustNotAllocate] only; other properties land in subsequent releases.</Description>
+    <PackageTags>roslyn;analyzer;dotnet-tool;cecil;il;callgraph;closure</PackageTags>
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>cgc-ilcheck</ToolCommandName>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\CallgraphClosure.ILCheck.Core\CallgraphClosure.ILCheck.Core.csproj" />
     <ProjectReference Include="..\MustNotAllocate.ILCheck\MustNotAllocate.ILCheck.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="NUGET-README.md" Pack="true" PackagePath="\" Visible="false" />
   </ItemGroup>
 </Project>

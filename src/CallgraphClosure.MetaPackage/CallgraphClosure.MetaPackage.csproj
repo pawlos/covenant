@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+
+    <IsPackable>true</IsPackable>
+    <PackageId>CallgraphClosure</PackageId>
+    <Title>CallgraphClosure</Title>
+    <Description>Meta-package for the CallgraphClosure family of property analyzers. Installing this pulls in all four current properties (MustNotAllocate, MustNotThrow, MustNotBlock, MustNotRecurse). Pre-release.</Description>
+    <PackageTags>roslyn;analyzer;callgraph;closure;meta-package</PackageTags>
+    <DevelopmentDependency>true</DevelopmentDependency>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <IncludeSymbols>false</IncludeSymbols>
+    <NoWarn>$(NoWarn);NU5128</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MustNotAllocate\MustNotAllocate.csproj" PrivateAssets="none" />
+    <ProjectReference Include="..\MustNotThrow\MustNotThrow.csproj" PrivateAssets="none" />
+    <ProjectReference Include="..\MustNotBlock\MustNotBlock.csproj" PrivateAssets="none" />
+    <ProjectReference Include="..\MustNotRecurse\MustNotRecurse.csproj" PrivateAssets="none" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="NUGET-README.md" Pack="true" PackagePath="\" Visible="false" />
+  </ItemGroup>
+</Project>

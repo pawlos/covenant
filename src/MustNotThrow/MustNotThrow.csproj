@@ -3,10 +3,25 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <IsRoslynComponent>true</IsRoslynComponent>
     <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+
+    <IsPackable>true</IsPackable>
+    <PackageId>CallgraphClosure.MustNotThrow</PackageId>
+    <Title>CallgraphClosure.MustNotThrow</Title>
+    <Description>Roslyn analyzer plus optional Cecil IL post-pass that enforces a [MustNotThrow] contract on annotated methods. Flags throws and unannotated calls across the transitive call closure. Part of the CallgraphClosure family of property analyzers. Pre-release.</Description>
+    <PackageTags>roslyn;analyzer;code-analysis;exceptions;error-handling;callgraph;closure</PackageTags>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <IncludeSymbols>false</IncludeSymbols>
+    <NoPackageAnalysis>true</NoPackageAnalysis>
+    <NoWarn>$(NoWarn);NU5017;NU5128</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.8.0" PrivateAssets="all" />
-    <ProjectReference Include="..\CallgraphClosure.Core\CallgraphClosure.Core.csproj" />
+    <ProjectReference Include="..\CallgraphClosure.Core\CallgraphClosure.Core.csproj" PrivateAssets="all" />
     <ProjectReference Include="..\CallgraphClosure.Attributes\CallgraphClosure.Attributes.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs/" Visible="false" />
+    <None Include="$(OutputPath)\CallgraphClosure.Core.dll" Pack="true" PackagePath="analyzers/dotnet/cs/" Visible="false" />
+    <None Include="NUGET-README.md" Pack="true" PackagePath="\" Visible="false" />
   </ItemGroup>
 </Project>

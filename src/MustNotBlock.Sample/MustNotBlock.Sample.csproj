@@ -5,13 +5,10 @@
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CallgraphClosure.Attributes\CallgraphClosure.Attributes.csproj" />
     <ProjectReference Include="..\CallgraphClosure.Core\CallgraphClosure.Core.csproj"
-                      OutputItemType="Analyzer"
-                      ReferenceOutputAssembly="false" />
-  </ItemGroup>
-  <ItemGroup>
-    <Analyzer Include="$(MSBuildThisFileDirectory)..\MustNotBlock\bin\$(Configuration)\netstandard2.0\MustNotBlock.dll" />
-    <Analyzer Include="$(MSBuildThisFileDirectory)..\CallgraphClosure.Core\bin\$(Configuration)\netstandard2.0\CallgraphClosure.Core.dll" />
-    <Reference Include="$(MSBuildThisFileDirectory)..\CallgraphClosure.Attributes\bin\$(Configuration)\netstandard2.0\CallgraphClosure.Attributes.dll" />
+                      OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="..\MustNotBlock\MustNotBlock.csproj"
+                      OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
   </ItemGroup>
 </Project>

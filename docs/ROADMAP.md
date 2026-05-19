@@ -19,19 +19,7 @@ This document lists next-step options in rough priority order. Not a commitment 
 
 ## Near-term (this week or next)
 
-### 1. Ship the writeup
-
-**Scope:** ~2-4 hours of polish + publishing ceremony.
-
-**What's left before posting:**
-- Fill the `<TBD>` repo URL placeholder in both `draft.md` and `social.md` (blocked on deciding where the repo lives — GitHub user/org).
-- Two IDE screenshots: (a) VS + Rider side-by-side showing CGC warnings on the Naive sample, (b) Naive project's Error List panel with the 3 CGC003s. Both need to live somewhere addressable — ideally `docs/writeup/images/` committed alongside the draft.
-- One human proofread pass, ideally by someone whose reaction to "callgraph closure" is *not* "yes, obviously."
-- Decide the posting cadence (see `social.md` — blog first, HN + LinkedIn same day, Twitter within 24h).
-
-**Why do it now:** every feature added before publishing muddies the clean narrative. The draft's thesis is sharpest with exactly what's already built — M3/fuzzing/etc. can come *after* the article ships and arrive as "follow-up work" rather than pre-ship scope creep.
-
-### 2. `[MustNotThrow]` as a second-property demo
+### 1. `[MustNotThrow]` as a second-property demo
 
 **Scope:** ~1-2 days. Spec exists at `docs/superpowers/specs/2026-04-19-must-not-throw-design.md` (written alongside this roadmap).
 
@@ -39,7 +27,7 @@ This document lists next-step options in rough priority order. Not a commitment 
 
 **Dependency:** none. Uses the existing `CallgraphClosure.Attributes`, `CallgraphClosure.Core`, and `CallgraphClosure.ILCheck.Core` libraries unchanged. Adds a new `MustNotThrow` (Roslyn) and `MustNotThrow.ILCheck` (Cecil) project pair, each ~50 lines.
 
-### 3. Packaging cleanup: split `MustNotAllocate.Abstractions`
+### 2. Packaging cleanup: split `MustNotAllocate.Abstractions`
 
 **Scope:** ~2-3 hours.
 
@@ -51,7 +39,7 @@ This document lists next-step options in rough priority order. Not a commitment 
 
 ## Medium-term (next month or two)
 
-### 4. M3: virtual dispatch + class-hierarchy analysis
+### 3. M3: virtual dispatch + class-hierarchy analysis
 
 **Scope:** ~1-2 weeks. Substantial — this is where the "honest limits" paragraph in the writeup currently lives.
 
@@ -63,13 +51,13 @@ This document lists next-step options in rough priority order. Not a commitment 
 
 These are different milestones, not alternatives — precise is a strict improvement if you're willing to build it.
 
-### 5. `[MustNotThrow]` showcase: exception-free error-handling pipeline
+### 4. `[MustNotThrow]` showcase: exception-free error-handling pipeline
 
 **Scope:** ~2-3 days.
 
 **Why:** a `TryValidate(input, out error)` API surface, naive vs optimized (e.g., naive throws + catches internally; optimized is pure-return-channel), with BenchmarkDotNet numbers showing the exception-allocation-plus-unwind-cost gap. Parallel to the HTTP parser showcase but for a different predicate — proves the infrastructure really is property-agnostic and gives the writeup a natural sequel.
 
-### 6. Differential fuzzing: Roslyn vs IL pass
+### 5. Differential fuzzing: Roslyn vs IL pass
 
 **Scope:** ~1 week.
 
@@ -79,13 +67,13 @@ These are different milestones, not alternatives — precise is a strict improve
 
 ## Long-term (someday)
 
-### 7. Upward propagation (`Direction = Upward`)
+### 6. Upward propagation (`Direction = Upward`)
 
 **Scope:** ~1 week in the core + property-specific demos.
 
 **Why:** Ferrocene's original use case ("calling a validated function infects the caller") is the upward direction. The `Config.Direction` field already exists as a hook; wiring it up is a core-level change plus a demo attribute like `[ValidatedCore]`. Expands the story from "enforce what YOU don't want to do" to "enforce what you want to CONTAIN."
 
-### 8. NativeAOT integration
+### 7. NativeAOT integration
 
 **Scope:** ~2 weeks.
 
@@ -93,24 +81,36 @@ These are different milestones, not alternatives — precise is a strict improve
 
 **Dependency:** real understanding of the NativeAOT build pipeline and its extensibility points; this is a bigger design-space question than the other items.
 
-### 9. ILLink plugin mode
+### 8. ILLink plugin mode
 
 **Scope:** ~2 weeks.
 
 **Why:** rather than a standalone Cecil tool, hook into ILLink's own `MarkStep` / `MarkHandler` extensibility points. Gains: inherit the trimmer's handling of virtual dispatch, generics, and trim-root discovery. Loses: coupling to Microsoft's extension surface, version skew concerns. The production-grade version of the IL pass.
 
+### 9. Ship the writeup
+
+**Scope:** ~2-4 hours of polish + publishing ceremony. Deferred — picked up when the author is ready, not on a milestone clock.
+
+**What's left before posting:**
+- Fill the `<TBD>` repo URL placeholder in both `draft.md` and `social.md` (now resolved: `github.com/pawlos/covenant`).
+- Two IDE screenshots: (a) VS + Rider side-by-side showing CGC warnings on the Naive sample, (b) Naive project's Error List panel with the 3 CGC003s. Both need to live somewhere addressable — ideally `docs/writeup/images/` committed alongside the draft.
+- One human proofread pass, ideally by someone whose reaction to "callgraph closure" is *not* "yes, obviously."
+- Decide the posting cadence (see `social.md` — blog first, HN + LinkedIn same day, Twitter within 24h).
+
+**Why deferred:** the original argument for shipping early was that pre-ship features muddy the narrative. That trade is now explicitly reversed — features added before publishing strengthen the article (extra properties, packaging polish, more showcases all become "look how this generalizes" rather than "scope creep"). Publish when the story feels complete.
+
 ## Known issues (tracked in `memory/known_issues.md`)
 
-- Analyzer + attribute ProjectReference packaging fragility (fix in item 3).
+- Analyzer + attribute ProjectReference packaging fragility (fix in item 2).
 - `[MustNotAllocate]` on top-level static methods doesn't trigger the analyzer (needs investigation; may be a real Roslyn gap).
-- CLI output volume was partially addressed in M2.5 via the expanded `bcl-amortized.json`. Cleanly solved for the HTTP showcase; still noisy when pointed at arbitrary third-party DLLs. Item 4 (`--stop-at-assembly`) is the principled fix.
+- CLI output volume was partially addressed in M2.5 via the expanded `bcl-amortized.json`. Cleanly solved for the HTTP showcase; still noisy when pointed at arbitrary third-party DLLs. Item 3 (`--stop-at-assembly`) is the principled fix.
 
 ## Decision heuristic
 
 When choosing the next item to commit to:
 
-- **If the writeup hasn't shipped:** pick item 1. Everything else orbits the writeup; shipping it compounds everything else.
-- **If you want more stories in the article before publishing:** pick item 2. `[MustNotThrow]` is the cheapest way to demonstrate "this generalizes" concretely.
-- **If you want the repo to stop embarrassing you when someone clones it cold:** pick item 3.
-- **If you want the tool to be defensible under adversarial review:** pick item 4 + item 6 in that order.
-- **If you have no specific constraint and want to work on something fun:** item 6 (differential fuzzing). Fuzz-finding bugs in your own tool is deeply satisfying.
+- **If you want one more property in the article before any future ship:** pick item 1. `[MustNotThrow]` is the cheapest way to demonstrate "this generalizes" concretely (alongside `[MustNotRecurse]`, already shipped).
+- **If you want the repo to stop embarrassing you when someone clones it cold:** pick item 2.
+- **If you want the tool to be defensible under adversarial review:** pick item 3 + item 5 in that order.
+- **If you have no specific constraint and want to work on something fun:** item 5 (differential fuzzing). Fuzz-finding bugs in your own tool is deeply satisfying.
+- **If the writeup feels ready to ship:** pick item 9. The pre-ship gating list is small and known.

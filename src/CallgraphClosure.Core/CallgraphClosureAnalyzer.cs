@@ -92,14 +92,37 @@ public abstract class CallgraphClosureAnalyzer : DiagnosticAnalyzer
         ImmutableHashSet<string> amortizedFileMethods,
         Compilation compilation)
     {
-        if (b.OwningSymbol is not IMethodSymbol caller) return;
-        if (!HasAttribute(caller, attrSym)) return;
+        if (b.OwningSymbol is not IMethodSymbol owner) return;
+
+        var ownerAnnotated = HasAttribute(owner, attrSym);
+        if (ownerAnnotated)
+        {
+            foreach (var block in b.OperationBlocks)
+            {
+                foreach (var op in block.DescendantsAndSelf())
+                {
+                    VisitOp(op, owner, attrSym, amortizedSym, amortizedFileMethods, compilation, b);
+                }
+            }
+        }
+
+        // File-scope methods in a top-level-statements program lower to local functions
+        // of the synthesized <Main>$. RegisterOperationBlockAction does not fire per
+        // local function, so we discover them by descending the owner's blocks.
+        // Skip when the owner is already annotated — its walk above covered these bodies.
+        if (ownerAnnotated) return;
 
         foreach (var block in b.OperationBlocks)
         {
-            foreach (var op in block.DescendantsAndSelf())
+            foreach (var lf in block.Descendants().OfType<ILocalFunctionOperation>())
             {
-                VisitOp(op, caller, attrSym, amortizedSym, amortizedFileMethods, compilation, b);
+                if (!HasAttribute(lf.Symbol, attrSym)) continue;
+                if (lf.Body is null) continue;
+
+                foreach (var op in lf.Body.DescendantsAndSelf())
+                {
+                    VisitOp(op, lf.Symbol, attrSym, amortizedSym, amortizedFileMethods, compilation, b);
+                }
             }
         }
     }

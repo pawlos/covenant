@@ -1,0 +1,44 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Folder Name="/bench/">
+    <Project Path="bench/Showcase.Http.Benchmarks/Showcase.Http.Benchmarks.csproj" />
+  </Folder>
+  <Folder Name="/packaging/">
+    <Project Path="src/CallgraphClosure.MetaPackage/CallgraphClosure.MetaPackage.csproj" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/CallgraphClosure.Attributes/CallgraphClosure.Attributes.csproj" />
+    <Project Path="src/CallgraphClosure.Core/CallgraphClosure.Core.csproj" />
+    <Project Path="src/CallgraphClosure.ILCheck.Cli/CallgraphClosure.ILCheck.Cli.csproj" />
+    <Project Path="src/CallgraphClosure.ILCheck.Core/CallgraphClosure.ILCheck.Core.csproj" />
+    <Project Path="src/MustNotAllocate.ILCheck/MustNotAllocate.ILCheck.csproj" />
+    <Project Path="src/MustNotAllocate.Sample/MustNotAllocate.Sample.csproj" />
+    <Project Path="src/MustNotAllocate/MustNotAllocate.csproj" />
+    <Project Path="src/MustNotBlock.ILCheck/MustNotBlock.ILCheck.csproj" />
+    <Project Path="src/MustNotBlock.Sample/MustNotBlock.Sample.csproj" />
+    <Project Path="src/MustNotBlock/MustNotBlock.csproj" />
+    <Project Path="src/MustNotRecurse.ILCheck/MustNotRecurse.ILCheck.csproj" />
+    <Project Path="src/MustNotRecurse.Sample/MustNotRecurse.Sample.csproj" />
+    <Project Path="src/MustNotRecurse/MustNotRecurse.csproj" />
+    <Project Path="src/MustNotThrow.ILCheck/MustNotThrow.ILCheck.csproj" />
+    <Project Path="src/MustNotThrow.Sample/MustNotThrow.Sample.csproj" />
+    <Project Path="src/MustNotThrow/MustNotThrow.csproj" />
+    <Project Path="src/Showcase.Http.Common/Showcase.Http.Common.csproj" />
+    <Project Path="src/Showcase.Http.Naive/Showcase.Http.Naive.csproj" />
+    <Project Path="src/Showcase.Http.Optimized/Showcase.Http.Optimized.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/MustNotAllocate.ILCheck.Tests/MustNotAllocate.ILCheck.Tests.csproj" />
+    <Project Path="tests/MustNotAllocate.Tests/MustNotAllocate.Tests.csproj" />
+    <Project Path="tests/MustNotBlock.ILCheck.Tests/MustNotBlock.ILCheck.Tests.csproj" />
+    <Project Path="tests/MustNotBlock.Tests/MustNotBlock.Tests.csproj" />
+    <Project Path="tests/MustNotRecurse.ILCheck.Tests/MustNotRecurse.ILCheck.Tests.csproj" />
+    <Project Path="tests/MustNotRecurse.Tests/MustNotRecurse.Tests.csproj" />
+    <Project Path="tests/MustNotThrow.ILCheck.Tests/MustNotThrow.ILCheck.Tests.csproj" />
+    <Project Path="tests/MustNotThrow.Tests/MustNotThrow.Tests.csproj" />
+  </Folder>
+</Solution>

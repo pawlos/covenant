@@ -60,10 +60,10 @@ public class EndToEndSampleTests
     private static string FindRepoRoot()
     {
         var dir = new DirectoryInfo(System.AppContext.BaseDirectory);
-        while (dir is not null && !File.Exists(Path.Combine(dir.FullName, "CallgraphClosure.sln")))
+        while (dir is not null && !File.Exists(Path.Combine(dir.FullName, "CallgraphClosure.slnx")))
             dir = dir.Parent;
         if (dir is null)
-            throw new FileNotFoundException("Could not locate repo root (CallgraphClosure.sln)");
+            throw new FileNotFoundException("Could not locate repo root (CallgraphClosure.slnx)");
         return dir.FullName;
     }
 }

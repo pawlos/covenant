@@ -2,7 +2,7 @@
 
 Cecil-based IL post-pass for the [CallgraphClosure](https://github.com/pawlos/covenant) property analyzers. Resolves the edit-time-deferred `CGC002` diagnostics by walking the IL of the built assembly graph — catches violations that cross assembly boundaries where the Roslyn analyzer can't see the source.
 
-> **Pre-release.** This 0.1.0-preview1 release currently supports `[MustNotAllocate]` only. Support for `[MustNotThrow]`, `[MustNotBlock]`, and `[MustNotRecurse]` lands in subsequent releases. The Roslyn analyzers for those properties already exist as separate packages — they just don't have IL-pass coverage yet.
+> **Pre-release.** The current preview supports `[MustNotAllocate]` only. Support for `[MustNotThrow]`, `[MustNotBlock]`, and `[MustNotRecurse]` lands in subsequent releases. The Roslyn analyzers for those properties already exist as separate packages — they just don't have IL-pass coverage yet.
 
 ## Install
 

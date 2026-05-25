@@ -17,6 +17,7 @@ This document lists next-step options in rough priority order. Not a commitment 
 | `[MustNotRecurse]` fourth-property buildout with cycle detection | ✅ |
 | Packaging cleanup: canonical `ProjectReference` for analyzer wiring | ✅ |
 | NuGet preview1 publish (7 packages under `CallgraphClosure.*`) | ✅ `0.1.0-preview1` |
+| `0.1.0-preview2` repack with local-function fix + top-level README | ✅ packed, awaiting push |
 | Local-function analyzer coverage (M1 issue #2 — top-level static methods) | ✅ |
 | `.sln` → `.slnx` solution-file migration | ✅ |
 | Writeup long-form draft | ✅ `docs/writeup/draft.md` (4600 words) |

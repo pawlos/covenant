@@ -32,6 +32,7 @@
     <Project Path="src/Showcase.Http.Optimized/Showcase.Http.Optimized.csproj" />
     <Project Path="src/Showcase.Validation.Common/Showcase.Validation.Common.csproj" />
     <Project Path="src/Showcase.Validation.Naive/Showcase.Validation.Naive.csproj" />
+    <Project Path="src/Showcase.Validation.Optimized/Showcase.Validation.Optimized.csproj" />
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/MustNotAllocate.ILCheck.Tests/MustNotAllocate.ILCheck.Tests.csproj" />

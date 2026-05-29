@@ -1,0 +1,2 @@
+src/Showcase.Validation.Naive/QuantityValidator.cs(21,17): warning CGC003: Method 'Validate' is annotated [MustNotThrowAttribute] but contains a throw [src/Showcase.Validation.Naive/Showcase.Validation.Naive.csproj]
+src/Showcase.Validation.Naive/QuantityValidator.cs(21,23): warning CGC003: Method 'Validate' is annotated [MustNotAllocateAttribute] but contains a object allocation [src/Showcase.Validation.Naive/Showcase.Validation.Naive.csproj]

@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Showcase.Validation.Common\Showcase.Validation.Common.csproj" />
+    <ProjectReference Include="..\CallgraphClosure.Attributes\CallgraphClosure.Attributes.csproj" />
+    <ProjectReference Include="..\CallgraphClosure.Core\CallgraphClosure.Core.csproj"
+                      OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="..\MustNotAllocate\MustNotAllocate.csproj"
+                      OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="..\MustNotThrow\MustNotThrow.csproj"
+                      OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+  </ItemGroup>
+</Project>

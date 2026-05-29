@@ -1,6 +1,6 @@
 # Roadmap
 
-As of 2026-05-19. Tags: `m1-complete`, `m2-complete`, `m2.5-complete`, `preview1-shipped`, `four-properties-shipped`.
+As of 2026-05-29. Tags: `m1-complete`, `m2-complete`, `m2.5-complete`, `preview1-shipped`, `four-properties-shipped`, `mustnotthrow-showcase-complete`.
 
 This document lists next-step options in rough priority order. Not a commitment — a menu. Each item has a scope estimate, dependencies, and the argument for/against doing it. When an item graduates into active work, write a spec for it under `docs/superpowers/specs/`, a plan under `docs/superpowers/plans/`, and update the table below with the tag.
 
@@ -12,12 +12,13 @@ This document lists next-step options in rough priority order. Not a commitment 
 | Cecil IL post-pass with transitive walk | ✅ M2 |
 | `[AmortizedAllocation]` escape hatch + JSON annotations file | ✅ M2.5 |
 | HTTP request-line parser showcase (Naive vs Optimized) with BenchmarkDotNet | ✅ M2.5 |
+| `[MustNotThrow]` validation showcase (Naive throw-and-catch vs Optimized return channel) with BenchmarkDotNet | ✅ |
 | `[MustNotThrow]` second-property buildout (analyzer + IL pass + tests + sample) | ✅ |
 | `[MustNotBlock]` third-property buildout (analyzer + IL pass + tests + sample) | ✅ |
 | `[MustNotRecurse]` fourth-property buildout with cycle detection | ✅ |
 | Packaging cleanup: canonical `ProjectReference` for analyzer wiring | ✅ |
 | NuGet preview1 publish (7 packages under `CallgraphClosure.*`) | ✅ `0.1.0-preview1` |
-| `0.1.0-preview2` repack with local-function fix + top-level README | ✅ packed, awaiting push |
+| `0.1.0-preview2` repack with local-function fix + top-level README | ✅ pushed to nuget.org |
 | Local-function analyzer coverage (M1 issue #2 — top-level static methods) | ✅ |
 | `.sln` → `.slnx` solution-file migration | ✅ |
 | Writeup long-form draft | ✅ `docs/writeup/draft.md` (4600 words) |
@@ -40,6 +41,8 @@ This document lists next-step options in rough priority order. Not a commitment 
 These are different milestones, not alternatives — precise is a strict improvement if you're willing to build it.
 
 ### 2. `[MustNotThrow]` showcase: exception-free error-handling pipeline
+
+**Status:** ✅ Done (2026-05-29). Implemented as the quantity-validation showcase: `src/Showcase.Validation.{Common,Naive,Optimized}` + `bench/Showcase.Validation.Benchmarks`. Naive throws-and-catches internally (flagged by `[MustNotThrow]` through the try/catch); Optimized is a pure span-based return channel (zero diagnostics). BDN out-of-range path: naive 1,151 ns / 232 B vs optimized 2.55 ns / 0 B. See `docs/superpowers/specs/2026-05-28-mustnotthrow-showcase-design.md` and `docs/superpowers/plans/2026-05-29-mustnotthrow-showcase.md`.
 
 **Scope:** ~2-3 days.
 
@@ -97,6 +100,6 @@ These are different milestones, not alternatives — precise is a strict improve
 When choosing the next item to commit to:
 
 - **If you want the tool to be defensible under adversarial review:** pick item 1 (M3 dispatch) + item 3 (differential fuzzing) in that order. Item 1 unblocks item 3.
-- **If you want the BDN-backed sequel story for the writeup:** pick item 2. Parallel to the HTTP showcase but for exceptions — naive throw-and-catch vs. pure-return-channel, with numbers.
+- **If you want the BDN-backed sequel story for the writeup:** item 2 is now done (the validation showcase) — the artifacts exist; what remains is folding them into a writeup sequel section (part of item 7).
 - **If you have no specific constraint and want to work on something fun:** item 3 (differential fuzzing). Best done after item 1; doing it before just rediscovers the dispatch gap.
 - **If the writeup feels ready to ship:** pick item 7. The pre-ship gating list is small and known.

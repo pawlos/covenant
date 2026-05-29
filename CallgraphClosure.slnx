@@ -6,6 +6,7 @@
   </Configurations>
   <Folder Name="/bench/">
     <Project Path="bench/Showcase.Http.Benchmarks/Showcase.Http.Benchmarks.csproj" />
+    <Project Path="bench/Showcase.Validation.Benchmarks/Showcase.Validation.Benchmarks.csproj" />
   </Folder>
   <Folder Name="/packaging/">
     <Project Path="src/CallgraphClosure.MetaPackage/CallgraphClosure.MetaPackage.csproj" />
